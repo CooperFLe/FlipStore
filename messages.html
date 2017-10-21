@@ -9,11 +9,11 @@
     <body>
         <div class="w3-sidebar w3-theme-l5 w3-bar-block" style="width:25%"> 
             <div class="w3-container w3-margin">
-                <a href="index.html"><img class="avatar w3-center" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="width:100%"/></a>
+               <a href="index.html"><img class="avatar w3-center" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="width:100%"/></a>
             </div>
-            <div class="w3-center">Balance: <p id="bal"/></div>
+            <div id="bal" class="w3-center"></div>
             <div class="w3-margin-top">
-                <ul class="w3-ul w3-hoverable">
+               <ul class="w3-ul w3-hoverable">
                     <li><a href="account.html" class="w3-bar-item w3-button">My Account</a></li>
                     <li><a href="messages.html" class="w3-bar-item w3-button">Messages</a></li>
                     <li><a href="index.html" class="w3-bar-item w3-button">Transactions</a></li>
@@ -42,4 +42,5 @@
         var accountBalance = 4910.23;
         document.getElementById("bal").innerHTML = accountBalance;
     </script>
-    
+
+<script src="balance.js"></script>
