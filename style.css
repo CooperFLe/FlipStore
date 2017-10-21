@@ -32,3 +32,17 @@
     -moz-border-radius: 50%;
     border-radius: 50%;
 }
+
+/* Font */
+@font-face {
+    font-family: sofiapro-light;
+    src: url(sofiapro-light.otf);
+}
+
+div {
+    font-family: sofiapro-light;
+}
+
+h1 {
+    font-family: sofiapro-light;
+}
