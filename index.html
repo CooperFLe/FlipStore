@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
-
+<link rel="stylesheet" href="style.css">
 
 <html>
     <head>
@@ -8,16 +7,29 @@
         <title>Hello World!</title>
     </head>
     <body>
-        <div class="w3-sidebar w3-bar-block" style="width:25%"> 
-            <a href="#" class="w3-bar-item w3-button">Link 1</a>
-            <a href="#" class="w3-bar-item w3-button">Link 2</a>
-            <a href="#" class="w3-bar-item w3-button">Link 3</a>
+        <div class="w3-sidebar w3-theme-l5 w3-bar-block" style="width:25%"> 
+            <div class="w3-container w3-margin">
+                <img class="avatar w3-center" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="width:100%"/>
+            </div>
+            <div class="w3-center">Balance: <p id="bal"/></div>
+            <div class="w3-margin-top">
+                <ul class="w3-ul w3-hoverable">
+                    <li><a href="#" class="w3-bar-item w3-button">My Account</a></li>
+                    <li><a href="#" class="w3-bar-item w3-button">Messages</a></li>
+                    <li><a href="#" class="w3-bar-item w3-button">Transactions</a></li>
+                    <li><a href="#" class="w3-bar-item w3-button">Clients</a></li>
+                    <li><a href="#" class="w3-bar-item w3-button">Logout</a></li>
+                </ul>
+            </div>
         </div>
                   
         <div style="margin-left:25%">
-           <div class="w3-container w3-pink">
-                <h1>Pending Invoices</h1>
+           <div class="w3-container w3-theme">
+                <h1 class="w3-right-align">Dashboard</h1>
             </div> 
+            <div class="w3-container"> 
+                [Content]
+            </div>
         </div>
         <script>
           // You can also require other files to run in this process
@@ -25,4 +37,9 @@
         </script>
     </body>
     </html>
+
+    <script>
+        var accountBalance = 4910.23;
+        document.getElementById("bal").innerHTML = accountBalance;
+    </script>
     
