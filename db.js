@@ -7,7 +7,7 @@ var con = mysql.createConnection({
 });
 
 var users;
-//document.getElementById("transactions").innerHTML = "<b>I hate you</b>";
+var transactions;
 con.query("SELECT * FROM hacktober.users", (err, rows) => {
   users = rows;
 });
@@ -22,10 +22,15 @@ con.query("SELECT * FROM hacktober.invoices WHERE approved=0", (err, rows) => {
       html = html + '<p class="text">' + row.timestamp + '</p> ';
       html = html + "</li>";
       console.log(html);
-//      document.getElementById("transactions").innerHTML = document.getElementById("transactions").innerHTML + html;
+      transactions = transactions + html;
+      document.getElementById("transactions").innerHTML = document.getElementById("transactions").innerHTML + html;
     });
     con.end();
 });
+
+function getTransaction(){
+  return transactions;
+}
 /*
 <ul class="w3-ul">
                 <li>

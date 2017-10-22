@@ -3,6 +3,7 @@
 
 <html>
     <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <meta charset="UTF-8">
         <title>Hacktober</title>
     </head>
@@ -36,12 +37,11 @@
             </div>
         </div>
         <script>
-          var mysql = require('db.js');
-          document.getElementById("transactions").innerHTML = "Hello from index";
           // You can also require other files to run in this process
           require('./renderer.js')
         </script>
     </body>
     </html>
 
+<script src="db.js"></script>
 <script src="balance.js"></script>
