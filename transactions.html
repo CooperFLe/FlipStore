@@ -1,0 +1,93 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="style.css">
+
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <meta charset="UTF-8">
+        <title>Hacktober</title>
+    </head>
+    <body>
+        <div class="w3-sidebar w3-theme-l5 w3-bar-block" style="width:25%"> 
+            <div class="w3-container w3-margin">
+               <a href="index.html"><img class="avatar w3-center" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="width:100%"/></a>
+            </div>
+            <div id="bal" class="w3-center"></div>
+            <div class="w3-margin-top">
+               <ul class="w3-ul w3-hoverable">
+                    <li><a href="account.html" class="w3-bar-item w3-button">My Account</a></li>
+                    <li><a href="messages.html" class="w3-bar-item w3-button">Messages</a></li>
+                    <li><a href="transactions.html" class="w3-bar-item w3-button">Transactions</a></li>
+                    <li><a href="clients.html" class="w3-bar-item w3-button">Clients</a></li>
+                    <li><a href="logout.html" class="w3-bar-item w3-button">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+                  
+        <div style="margin-left:25%">
+           <div class="w3-container w3-theme">
+                <h1 class="w3-right-align text">Transactions</h1>
+            </div> 
+            <div class="w3-container"> 
+            <ul class="w3-ul">
+                  <div id="transactions" class="text">
+                        
+                  </div>
+            </ul> 
+            </div>
+        </div>
+        <script>
+            const mysql = require('mysql');
+
+            var con = mysql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "mysqlpass"
+            });
+
+            var users;
+            var transactions;
+            con.query("SELECT * FROM hacktober.users", (err, rows) => {
+            users = rows;
+            document.getElementById("bal").innerHTML = "Org Balance: $" + users[0].balance.toFixed(2);
+            });
+            con.query("SELECT * FROM hacktober.invoices", (err, rows) => {
+            if(err) return err.stack;
+                rows.forEach( (row) => {
+                const personID = row.personID;
+                var html = "";
+                html = html + `<button onclick="accordion('drop${row.invoiceID}')" class="w3-button w3-block w3-white w3-left-align">`
+                html = html + "<li>";
+                html = html + '<img class="avatar" src="' + users[personID].avatar + '" alt="logo" style="height:10%" align="left">';
+                html = html + '<h4 class="text">' + users[personID].name + '</h4>';
+                if(row.approved){
+                    html = html + '<p class="text">Completed</p>';
+                }
+                else{
+                    html = html + '<p class="text">' + row.timestamp + '</p> ';
+                }
+                html = html + '<div id="drop' + row.invoiceID + '" class="w3-container w3-hide text">';
+                html = html + '<h4 class="text">Event: ' + row.event + '</h4>';
+                html = html + `<h5 class="text">Receipt: <a href=${row.image} target="_blank">Image</a>`;
+                html = html + `<h5 class="text">Amount: $${row.amount}</h5>`;
+                html = html + `<h5 class="text">Notes: ${row.notes}</h5>`;
+                if(!row.approved){
+                    html = html + `<a onclick="acceptTransaction(${row.invoiceID})" href="transactions.html" class="w3-btn w3-green">Accept</a>`;
+                }
+                html = html + "</div></li>";
+                transactions = transactions + html;
+                if(document.getElementById("transactions"))
+                    document.getElementById("transactions").innerHTML = document.getElementById("transactions").innerHTML + html;
+                });
+            });
+
+            function acceptTransaction(id){
+                con.query(`UPDATE hacktober.invoices SET approved=1, paid=1 WHERE invoiceID=${id}`);
+            }
+          // You can also require other files to run in this process
+          require('./renderer.js')
+        </script>
+    </body>
+    </html>
+
+<script src="expand.js"></script>
