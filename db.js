@@ -31,7 +31,7 @@ con.query("SELECT * FROM hacktober.invoices WHERE approved=0", (err, rows) => {
       html = html + '<div id="drop' + row.invoiceID + '" class="w3-container w3-hide text">';
       html = html + '<h4 class="text">Event: ' + row.event + '</h4>';
       html = html + `<h5 class="text">Receipt: <a href=${row.image} target="_blank">Image</a>`;
-      html = html + `<h5 class="text">Amount: $${row.amount}</h5>`;
+      html = html + `<h5 class="text">Amount: $${row.amount.toFixed(2)}</h5>`;
       html = html + `<h5 class="text">Notes: ${row.notes}</h5>`;
       if(!row.approved){
         html = html + `<a onclick="acceptTransaction(${row.invoiceID})" href="index.html" class="w3-btn w3-green">Accept</a>`;

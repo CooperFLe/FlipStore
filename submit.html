@@ -1,0 +1,95 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="style.css">
+
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <meta charset="UTF-8">
+        <title>Hacktober</title>
+    </head>
+    <body>
+        <div class="w3-sidebar w3-theme-l5 w3-bar-block" style="width:25%"> 
+            <div class="w3-container w3-margin">
+               <a href="index.html"><img class="avatar w3-center" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="width:100%"/></a>
+            </div>
+            <div id="bal" class="w3-center"></div>
+            <div class="w3-margin-top">
+               <ul class="w3-ul w3-hoverable">
+                    <li><a href="account.html" class="w3-bar-item w3-button">My Account</a></li>
+                    <li><a href="messages.html" class="w3-bar-item w3-button">Messages</a></li>
+                    <li><a href="transactions.html" class="w3-bar-item w3-button">Transactions</a></li>
+                    <li><a href="clients.html" class="w3-bar-item w3-button">Clients</a></li>
+                    <li><a href="submit.html" class="w3-bar-item w3-button">Submit</a></li>
+                    <li><a href="logout.html" class="w3-bar-item w3-button">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+                  
+        <div style="margin-left:25%">
+           <div class="w3-container w3-theme">
+                <h1 class="w3-right-align text">Submit</h1>
+            </div> 
+            <div class="w3-container"> 
+            <ul class="w3-ul">
+                  <div class="text">
+                        <form id="newInvoice" class="text">
+                                ID:<br>
+                                <input type="text" name="personID"><br>
+                                Amount:<br>
+                                <input type="text" name="amount"><br>
+                                Event:<br>
+                                <input type="text" name="title"><br>
+                                 Notes:<br>
+                                 <input type="text" name="notes"><br>
+                                 Image:<br>
+                                 <input type="file" id="file" name="file"/><br><br>
+                            </form> 
+                                 <button onclick="submit()" href="index.html">Submit</button> 
+                  </div>
+            </ul> 
+            </div>
+        </div>
+        <script>
+            const mysql = require('mysql');
+
+            var con = mysql.createConnection({
+                host: "localhost",
+                user: "root",
+                password: "mysqlpass"
+            });
+
+            con.query("SELECT balance FROM hacktober.users WHERE personID=1",(err,rows) => {
+                document.getElementById("bal").innerHTML = "Org Balance: $"+rows[0].balance.toFixed(2);
+            })
+
+            function submit(){
+                var x = document.getElementById("newInvoice");
+                if(x.length > 4){
+                    var personID = x.elements[0].value;
+                    var amount = x.elements[1].value;
+                    var title = x.elements[2].value;
+                    var notes = x.elements[3].value;
+                    var imgPath = x.elements[4].value; 
+                    if(imgPath.includes("hacktober")) 
+                        con.query(`INSERT INTO hacktober.invoices (personID, amount, event, notes, image, timestamp) VALUES (${personID},${amount},"${title}","${notes}","https://s3.amazonaws.com/hacktober-invoices/hacktober.png",current_timestamp())`);
+                    else
+                    if(imgPath.includes("rec"))
+                        con.query(`INSERT INTO hacktober.invoices (personID, amount, event, notes, image, timestamp) VALUES (${personID},${amount},"${title}","${notes}","https://s3.amazonaws.com/hacktober-invoices/receipt.jpg",current_timestamp())`);
+                    else
+                        con.query(`INSERT INTO hacktober.invoices (personID, amount, event, notes, image, timestamp) VALUES (${personID},${amount},"${title}","${notes}","${imgPath}",current_timestamp())`);
+                    location.href = "index.html";
+                }
+                else
+                    file();
+            }
+            function file(){
+                   
+
+                con.query(`INSERT INTO hacktober.invoices (personID, amount, event, notes, image, timestamp) VALUES (1,37.50,"Hackathon","I need sleep","https://s3.amazonaws.com/hacktober-invoices/hacktober.png",current_timestamp())`);
+            }
+          // You can also require other files to run in this process
+          require('./renderer.js')
+        </script>
+    </body>
+    </html>
+<script src="expand.js"></script>

@@ -19,6 +19,7 @@
                     <li><a href="messages.html" class="w3-bar-item w3-button">Messages</a></li>
                     <li><a href="transactions.html" class="w3-bar-item w3-button">Transactions</a></li>
                     <li><a href="clients.html" class="w3-bar-item w3-button">Clients</a></li>
+                    <li><a href="submit.html" class="w3-bar-item w3-button">Submit</a></li>
                     <li><a href="logout.html" class="w3-bar-item w3-button">Logout</a></li>
                 </ul>
             </div>
@@ -70,7 +71,7 @@
                 html = html + '<div id="drop' + row.invoiceID + '" class="w3-container w3-hide text">';
                 html = html + '<h4 class="text">Event: ' + row.event + '</h4>';
                 html = html + `<h5 class="text">Receipt: <a href=${row.image} target="_blank">Image</a>`;
-                html = html + `<h5 class="text">Amount: $${row.amount}</h5>`;
+                html = html + `<h5 class="text">Amount: $${row.amount.toFixed(2)}</h5>`;
                 html = html + `<h5 class="text">Notes: ${row.notes}</h5>`;
                 if(!row.approved){
                     html = html + `<a onclick="acceptTransaction(${row.invoiceID})" href="transactions.html" class="w3-btn w3-green">Accept</a>`;
