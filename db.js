@@ -21,7 +21,13 @@ con.query("SELECT * FROM hacktober.invoices WHERE approved=0", (err, rows) => {
       html = html + "<li>";
       html = html + '<img class="avatar" src="' + users[personID].avatar + '" alt="logo" style="height:10%" align="left">';
       html = html + '<h4 class="text">' + users[personID].name + '</h4>';
-      html = html + '<p class="text">' + row.timestamp + '</p> ';
+      if(row.approved){
+          html = html + '<p class="text">Completed</p>';
+      }
+      else{
+          html = html + '<p class="text w3-text-red">Pending</p>';
+      }
+      html = html + '<p class="text w3-right-align">' + row.timestamp + '</p> ';
       html = html + '<div id="drop' + row.invoiceID + '" class="w3-container w3-hide text">';
       html = html + '<h4 class="text">Event: ' + row.event + '</h4>';
       html = html + `<h5 class="text">Receipt: <a href=${row.image} target="_blank">Image</a>`;
