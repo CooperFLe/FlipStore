@@ -30,65 +30,48 @@
             </div> 
           
             <div class="w3-container"> 
-            
-          
-            <div class="w3-ul">
-            
-            <button onclick="accordion('drop1')" class="w3-button w3-block w3-white w3-left-align">
-              <li>
-                <img class="avatar" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="height:10%" align="left"> 
-                <h4 class="text">Jason Waye</h4>
-                <div id="drop1" class="w3-container w3-hide">
-                  <p>Pending Requests: 5</p>
-                  <p><u><font color = blue>Transaction History</font></u></p>
-                  <p>Send Message</p>
-                </div>
-               </li>
-              </button>
-              
-               <button onclick="accordion('drop2')" class="w3-button w3-block w3-white w3-left-align">
-                  <li>
-                    <img class="avatar" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="height:10%" align="left"> 
-                    <h4 class="text">Cooper Le</h4>
-                    <div id="drop2" class="w3-container w3-hide">
-                      <p>Pending Requests: 5</p>
-                      <p><u><font color = blue>Transaction History</font></u></p>
-                      <p>Send Message</p>
-                    </div>
-                   </li>
-                  </button>
-                  
-                   <button onclick="accordion('drop3')" class="w3-button w3-block w3-white w3-left-align">
-                      <li>
-                        <img class="avatar" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="height:10%" align="left"> 
-                        <h4 class="text">Joey Hamad</h4>
-                        <div id="drop3" class="w3-container w3-hide">
-                          <p>Pending Requests: 5</p>
-                          <p><u><font color = blue>Transaction History</font></u></p>
-                          <p>Send Message</p>
-                        </div>
-                       </li>
-                      </button>
-                      
-                       <button onclick="accordion('drop4')" class="w3-button w3-block w3-white w3-left-align">
-                          <li>
-                            <img class="avatar" src="https://pbs.twimg.com/profile_images/883032684284452864/pFLc_D2c_400x400.jpg" alt="logo" style="height:10%" align="left"> 
-                            <h4 class="text">Wason Jaye</h4>
-                            <div id="drop4" class="w3-container w3-hide">
-                              <p>Pending Requests: 5</p>
-                              <p><u><font color = blue>Transaction History</font></u></p>
-                              <p>Send Message</p>
-                            </div>
-                           </li>
-                          </button>
+                <ul class="w3-ul">
+                    <div id="content" class="text"></div>
+                </ul>
             </div>
         </div>
         <script>
+            const mysql = require('mysql');
+
+            var con = mysql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "mysqlpass"
+            });
+
+            var users;
+            var transactions;
+            con.query("SELECT * FROM hacktober.users", (err, rows) => {
+              document.getElementById("bal").innerHTML = "Org Balance: $" + rows[0].balance.toFixed(2);
+              if(err) return err.stack;
+                  rows.forEach( (row) => {
+                  var html = "";
+                  html = html + `<button onclick="accordion('drop${row.personID}')" class="w3-button w3-block w3-white w3-left-align">`
+                  html = html + "<li>";
+                  html = html + '<img class="avatar" src="' + row.avatar + '" alt="logo" style="height:10%" align="left">';
+                  html = html + '<h4 class="text">' + row.name + '</h4>';
+                  html = html + `<p>Balance: $${row.balance.toFixed(2)}`;
+                  html = html + '<div id="drop' + row.personID + '" class="w3-container w3-hide text">';
+        //          html = html + '<h4 class="text">Pending Requests: ' + pendingRequests + '</h4>';
+                  html = html + '<h4 class="text"><a onclick="transactionHistory()" class="button">Transaction History</a></h4>';
+                  html = html + "</div></li>";
+                  if(document.getElementById("content") && row.personID!==1)
+                      document.getElementById("content").innerHTML = document.getElementById("content").innerHTML + html;
+              });
+            });
+
+            function acceptTransaction(id){
+                con.query(`UPDATE hacktober.invoices SET approved=1, paid=1 WHERE invoiceID=${id}`);
+            }
           // You can also require other files to run in this process
           require('./renderer.js')
         </script>
     </body>
     </html>
     
-<script src="db.js"></script>    
 <script src="expand.js"></script>
