@@ -58,16 +58,50 @@
                   html = html + `<p>Balance: $${row.balance.toFixed(2)}`;
                   html = html + '<div id="drop' + row.personID + '" class="w3-container w3-hide text">';
         //          html = html + '<h4 class="text">Pending Requests: ' + pendingRequests + '</h4>';
-                  html = html + '<h4 class="text"><a onclick="transactionHistory()" class="button">Transaction History</a></h4>';
+                  html = html + `<a onclick="transactionHistory(${row.personID})" href="#" class="w3-btn w3-green text">Transaction History</a>`;
                   html = html + "</div></li>";
                   if(document.getElementById("content") && row.personID!==1)
                       document.getElementById("content").innerHTML = document.getElementById("content").innerHTML + html;
-              });
+              })
             });
-
-            function acceptTransaction(id){
-                con.query(`UPDATE hacktober.invoices SET approved=1, paid=1 WHERE invoiceID=${id}`);
-            }
+           
+            function transactionHistory(id){
+              document.getElementById("content").innerHTML = "";
+              var users;
+              con.query('SELECT * FROM hacktober.users', (err,rows) => {
+                users = rows;
+              })
+                con.query(`SELECT * FROM hacktober.invoices WHERE personID=${id-1}`, (err, rows) => {
+                    if(err) return err.stack;
+                    rows.forEach( (row) => {
+                    const personID = row.personID;
+                    var html = "";
+                    html = html + `<button onclick="accordion('drop${row.invoiceID}')" class="w3-button w3-block w3-white w3-left-align">`
+                    html = html + "<li>";
+                    html = html + '<img class="avatar" src="' + users[personID].avatar + '" alt="logo" style="height:10%" align="left">';
+                    html = html + '<h4 class="text">' + users[personID].name + '</h4>';
+                  if(row.approved){
+                        html = html + '<p class="text">Completed</p>';
+                    }
+                    else{
+                        html = html + '<p class="text w3-text-red">Pending</p>';
+                    }
+                    html = html + '<p class="text w3-right-align">' + row.timestamp + '</p>';
+                    html = html + '<div id="drop' + row.invoiceID + '" class="w3-container w3-hide text">';
+                    html = html + '<h4 class="text">Event: ' + row.event + '</h4>';
+                    html = html + `<h5 class="text">Receipt: <a href=${row.image} target="_blank">Image</a>`;
+                    html = html + `<h5 class="text">Amount: $${row.amount}</h5>`;
+                    html = html + `<h5 class="text">Notes: ${row.notes}</h5>`;
+                    if(!row.approved){
+                        html = html + `<a onclick="acceptTransaction(${row.invoiceID})" href="transactions.html" class="w3-btn w3-green">Accept</a>`;
+                    }
+                    html = html + "</div></li>";
+                    transactions = transactions + html;
+                    if(document.getElementById("content"))
+                        document.getElementById("content").innerHTML = document.getElementById("content").innerHTML + html;
+                    });
+                });
+            };
           // You can also require other files to run in this process
           require('./renderer.js')
         </script>

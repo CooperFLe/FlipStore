@@ -51,7 +51,7 @@
             users = rows;
             document.getElementById("bal").innerHTML = "Org Balance: $" + users[0].balance.toFixed(2);
             });
-            con.query("SELECT * FROM hacktober.invoices", (err, rows) => {
+            con.query("SELECT * FROM hacktober.invoices ORDER BY paid", (err, rows) => {
             if(err) return err.stack;
                 rows.forEach( (row) => {
                 const personID = row.personID;
@@ -83,8 +83,20 @@
             });
 
             function acceptTransaction(id){
-                con.query(`UPDATE hacktober.invoices SET approved=1, paid=1 WHERE invoiceID=${id}`);
-            }
+                con.query(`SELECT personID, amount FROM hacktober.invoices WHERE invoiceID=${id}`, (err,rows) => {
+                dif = rows[0].amount;
+                userID = rows[0].personID + 1;
+                con.query(`SELECT balance FROM hacktober.users WHERE personID=${userID}`, (err,rows) => {
+                    accountBal = rows[0].balance + dif;
+                    con.query(`UPDATE hacktober.users SET balance=${accountBal} WHERE personID=${userID}`, null);
+                });
+                con.query('SELECT balance FROM hacktober.users WHERE personID=1', (err,rows) => {
+                    orgBal = rows[0].balance - dif;
+                    con.query(`UPDATE hacktober.users SET balance=${orgBal} WHERE personID=1`, null);
+                });
+                con.query(`UPDATE hacktober.invoices SET approved=1, paid=1 WHERE invoiceID=${id}`, null);
+            });
+}
           // You can also require other files to run in this process
           require('./renderer.js')
         </script>
