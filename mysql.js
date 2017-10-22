@@ -11,6 +11,12 @@ con.connect(function(err) {
   console.log("Connected!");
 });
 
+var users;
+
+con.query("SELECT * FROM hacktober.users", (err, rows) => {
+  users = rows;
+})
+
 getOpenTransactions();
 function getConnection() {
   return con;
@@ -22,11 +28,7 @@ function getOpenTransactions() {
 
     rows.forEach( (row) => {
       console.log(`${row.event} cost $${row.amount}.`);
-      con.query(`SELECT * from hacktober.users WHERE personID=${row.personID}`, (err,users) => {
-        users.forEach((user) => {
-          console.log(`${user.name} has a balance of $${user.balance}.`);
-        });
-      });
+      console.log(users[row.personID-1].name + " has a balance of " + users[row.personID-1].balance);
     });
   });
 
