@@ -14,22 +14,22 @@ con.query("SELECT * FROM hacktober.users", (err, rows) => {
 con.query("SELECT * FROM hacktober.invoices WHERE approved=0", (err, rows) => {
    if(err) return err.stack;
     rows.forEach( (row) => {
-      const personID = row.personID - 1;
+      const personID = row.personID;
       var html = "";
       html = html + "<li>";
       html = html + '<img class="avatar" src="' + users[personID].avatar + '" alt="logo" style="height:10%" align="left">';
       html = html + '<h4 class="text">' + users[personID].name + '</h4>';
       html = html + '<p class="text">' + row.timestamp + '</p> ';
       html = html + "</li>";
-      console.log(html);
       transactions = transactions + html;
-      document.getElementById("transactions").innerHTML = document.getElementById("transactions").innerHTML + html;
+      if(document.getElementById("transactions"))
+        document.getElementById("transactions").innerHTML = document.getElementById("transactions").innerHTML + html;
+      document.getElementById("bal").innerHTML = "Org Balance: $" + users[0].balance;
     });
-    con.end();
 });
 
-function getTransaction(){
-  return transactions;
+function getUsers(){
+  return users;
 }
 /*
 <ul class="w3-ul">
